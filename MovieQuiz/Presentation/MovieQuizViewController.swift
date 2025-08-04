@@ -75,14 +75,10 @@ final class MovieQuizViewController: UIViewController {
             correctAnswer: false)
     ]
     
-    //private let currentQuestion = questions[currentQuestionIndex]
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        //YSDisplay-Medium
-        //YSDisplay-Bold
         
         yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
