@@ -3,19 +3,19 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     
-    struct QuizQuestion {
+    private struct QuizQuestion {
         let image: String
         let text: String
         let correctAnswer: Bool
     }
     
-    struct QuizStepViewModel {
+    private struct QuizStepViewModel {
         let image: UIImage
         let question: String
         let questionNumber: String
     }
     
-    struct QuizResultsViewModel {
+    private struct QuizResultsViewModel {
         let title: String
         let text: String
         let buttonText: String
@@ -95,14 +95,19 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction func yesButtonClicked(_ sender: UIButton) {
         
-        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == true)
-        
-        
+        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer)
+        setButtonsEnabled(false)
     }
     
     
     @IBAction func noButtonClicked(_ sender: UIButton) {
-        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == false)
+        showAnswerResult(isCorrect: !questions[currentQuestionIndex].correctAnswer)
+        setButtonsEnabled(false)
+    }
+    
+    private func setButtonsEnabled(_ isEnabled: Bool) {
+        noButton.isEnabled = isEnabled
+        yesButton.isEnabled = isEnabled
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -112,8 +117,7 @@ final class MovieQuizViewController: UIViewController {
         }
         
         previewImage.layer.masksToBounds = true
-        previewImage.layer.borderWidth = 1
-        previewImage.layer.cornerRadius = 8
+        previewImage.layer.borderWidth = 8
         previewImage.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         
@@ -136,10 +140,13 @@ final class MovieQuizViewController: UIViewController {
         questionLabel.text = step.question
         indexLabel.text = step.questionNumber
         previewImage.image = step.image
+        previewImage.layer.borderWidth = 0
+        previewImage.layer.borderColor = nil
     }
     
     
     private func showNextQuestionOrResults() {
+        setButtonsEnabled(true)
         if currentQuestionIndex == questions.count - 1 {
             let resultModel = QuizResultsViewModel(
                 title: "Игра закончена",
