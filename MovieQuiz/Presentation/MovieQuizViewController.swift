@@ -119,9 +119,12 @@ final class MovieQuizViewController: UIViewController {
         previewImage.layer.masksToBounds = true
         previewImage.layer.borderWidth = 8
         previewImage.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        setButtonsEnabled(false)
         
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.setButtonsEnabled(true)
+            self.previewImage.layer.borderWidth = 0
             self.showNextQuestionOrResults()
         }
     }
@@ -140,8 +143,6 @@ final class MovieQuizViewController: UIViewController {
         questionLabel.text = step.question
         indexLabel.text = step.questionNumber
         previewImage.image = step.image
-        previewImage.layer.borderWidth = 0
-        previewImage.layer.borderColor = nil
     }
     
     
