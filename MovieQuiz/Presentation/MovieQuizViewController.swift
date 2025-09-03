@@ -61,18 +61,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     
     @IBAction func yesButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else { return }
-        let givenAnswer = true
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        setButtonsEnabled(false)
+        handleAnswer(true)
     }
     
     
     @IBAction func noButtonClicked(_ sender: UIButton) {
+        handleAnswer(false)
+    }
+    
+    private func handleAnswer(_ givenAnswer: Bool) {
         guard let currentQuestion = currentQuestion else { return }
-        let givenAnswer = false
+        let givenAnswer = true
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        setButtonsEnabled(false)
     }
     
     private func setButtonsEnabled(_ isEnabled: Bool) {
@@ -150,7 +150,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             Средняя точность: \(String(format: "%.2f",statisticService?.totalAccuracy ?? 0))%
             """
         
-        
         let model = AlertModel(
             title: result.title,
             message: "\(result.text)\n\(message)",
@@ -161,7 +160,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 self.correctAnswers = 0
                 self.questionFactory?.requestNextQuestion()
             }
-        
         
         alertPresenter?.show(quiz: model)
         
