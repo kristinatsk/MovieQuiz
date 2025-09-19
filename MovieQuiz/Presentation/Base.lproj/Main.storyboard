@@ -104,19 +104,25 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="pf3-vT-JQ2">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="pf3-vT-JQ2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8kK-tN-hO3"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="DhP-pH-ak7" secondAttribute="bottom" id="9MG-G1-pb0"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="DhP-pH-ak7" secondAttribute="trailing" constant="20" id="D99-Mu-6dp"/>
                             <constraint firstItem="DhP-pH-ak7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Pq7-JA-FVy"/>
                             <constraint firstItem="DhP-pH-ak7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="WQS-RS-Grc"/>
                             <constraint firstItem="oJY-Ng-MNa" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="jwB-9v-ZWN"/>
                             <constraint firstItem="C7E-w5-sNl" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="lbP-28-69l"/>
+                            <constraint firstItem="pf3-vT-JQ2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="mIh-RR-dGn"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="pf3-vT-JQ2" id="HCq-n6-HYc"/>
                         <outlet property="indexLabel" destination="BSN-Jq-rJr" id="E9h-Fx-wfm"/>
                         <outlet property="noButton" destination="T9h-xM-U0F" id="b00-ed-V7z"/>
                         <outlet property="previewImage" destination="Jfd-PQ-dc2" id="GRN-9v-2pu"/>
