@@ -25,7 +25,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             let index = (0..<self.movies.count).randomElement() ?? 0
             
             guard let movie = self.movies[safe: index] else { return }
-            
+        
             var imageData = Data()
             
             do {

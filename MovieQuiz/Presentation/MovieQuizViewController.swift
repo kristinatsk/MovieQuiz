@@ -40,10 +40,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
         
-
-        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         showLoadingIndicator()
-        questionFactory.loadData()
+        questionFactory?.loadData()
         
         alertPresenter = AlertPresenter(viewController: self)
         
@@ -111,7 +110,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-       
+        
         return QuizStepViewModel(
             image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
