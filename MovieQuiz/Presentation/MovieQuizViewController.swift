@@ -14,8 +14,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - Lifecycle
     
-    @IBOutlet weak private var yesButton: UIButton!
-    @IBOutlet weak private var noButton: UIButton!
+    @IBOutlet weak var yesButton: UIButton!
+    @IBOutlet weak var noButton: UIButton!
     @IBOutlet weak private var questionTitleLabel: UILabel!
     @IBOutlet weak private var questionLabel: UILabel!
     @IBOutlet weak private var previewImage: UIImageView!
@@ -44,6 +44,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.loadData()
         
         alertPresenter = AlertPresenter(viewController: self)
+        presenter.viewController = self
         
         UserDefaults.standard.set(Date(), forKey: "bestGame.date")
         let date = UserDefaults.standard.object(forKey: "bestGame.date") as? Date ?? Date()
@@ -68,25 +69,23 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     
     @IBAction func yesButtonClicked(_ sender: UIButton) {
-        handleAnswer(true)
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked()
     }
     
     
     @IBAction func noButtonClicked(_ sender: UIButton) {
-        handleAnswer(false)
+        presenter.currentQuestion = currentQuestion
+        presenter.noButtonClicked()
     }
     
-    private func handleAnswer(_ givenAnswer: Bool) {
-        guard let currentQuestion = currentQuestion else { return }
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
     
     private func setButtonsEnabled(_ isEnabled: Bool) {
         noButton.isEnabled = isEnabled
         yesButton.isEnabled = isEnabled
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         
         if isCorrect {
             correctAnswers += 1
