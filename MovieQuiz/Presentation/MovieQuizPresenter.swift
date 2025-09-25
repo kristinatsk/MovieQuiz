@@ -72,7 +72,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     private func handleAnswer(_ givenAnswer: Bool) {
         guard let currentQuestion = currentQuestion else { return }
-        viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        proceedWithAnswer(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     private func setButtonsEnabled(_ isEnabled: Bool) {
@@ -100,7 +100,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 title: "Игра закончена",
                 text: "Правильных ответов: \(correctAnswers)/10",
                 buttonText: "Сыграть еще раз")
-                viewController?.show(quiz: resultModel)
+            viewController?.show(quiz: resultModel)
             
         } else {
             self.switchToNextQuestion()
@@ -120,15 +120,16 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         
         let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
         let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
-        let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)" + "(\(bestGame.date.dateTimeString)"
+        let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)" + "(\(bestGame.date.dateTimeString))"
         let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
         
-        let resultMessage = [currentGameResultLine, totalPlaysCountLine, averageAccuracyLine].joined(separator: "\n")
+        let resultMessage = [currentGameResultLine, bestGameInfoLine, totalPlaysCountLine, averageAccuracyLine].joined(separator: "\n")
         
         return resultMessage
     }
     
     func proceedWithAnswer(isCorrect: Bool) {
+        viewController?.highlightImageBorder(isCorrect: isCorrect)
         
         didAnswer(isCorrectAnswer: isCorrect)
         setButtonsEnabled(false)
@@ -137,7 +138,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             [weak self] in
             guard let self = self else { return }
             self.setButtonsEnabled(true)
-            self.showNextQuestionOrResults()
+            self.proceedToNextQuestionOrResults()
         }
     }
 }

@@ -1,8 +1,8 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-
-
+    
+    
     
     // MARK: - Lifecycle
     
@@ -33,16 +33,15 @@ final class MovieQuizViewController: UIViewController {
         alertPresenter = AlertPresenter(viewController: self)
         presenter = MovieQuizPresenter(viewController: self)
         
+        previewImage.layer.cornerRadius = 20
+        
         UserDefaults.standard.set(Date(), forKey: "bestGame.date")
         let date = UserDefaults.standard.object(forKey: "bestGame.date") as? Date ?? Date()
         
         
     }
     
-    
-
-    
-    
+    //MARK: Actions
     @IBAction func yesButtonClicked(_ sender: UIButton) {
         presenter.yesButtonClicked()
     }
@@ -53,8 +52,10 @@ final class MovieQuizViewController: UIViewController {
     }
     
     
+    //MARK: Private functions
+    
     func highlightImageBorder(isCorrect: Bool) {
-                
+        
         previewImage.layer.masksToBounds = true
         previewImage.layer.borderWidth = 8
         previewImage.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
@@ -77,7 +78,7 @@ final class MovieQuizViewController: UIViewController {
             title: result.title,
             message: message,
             preferredStyle: .alert)
-     
+        
         let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
             guard let self = self else { return }
             
