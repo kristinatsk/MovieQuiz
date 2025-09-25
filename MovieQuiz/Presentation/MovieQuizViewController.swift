@@ -53,32 +53,14 @@ final class MovieQuizViewController: UIViewController {
     }
     
     
-    private func setButtonsEnabled(_ isEnabled: Bool) {
-        noButton.isEnabled = isEnabled
-        yesButton.isEnabled = isEnabled
-    }
-    
-    func showAnswerResult(isCorrect: Bool) {
-        
-        presenter.didAnswer(isCorrectAnswer: isCorrect)
-        
+    func highlightImageBorder(isCorrect: Bool) {
+                
         previewImage.layer.masksToBounds = true
         previewImage.layer.borderWidth = 8
         previewImage.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        setButtonsEnabled(false)
         
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            [weak self] in
-            guard let self = self else { return }
-            self.setButtonsEnabled(true)
-            self.previewImage.layer.borderWidth = 0
-            self.presenter.showNextQuestionOrResults()
-        }
     }
     
-    
-   
     
     func show(quiz step: QuizStepViewModel) {
         statisticService?.store(correct: presenter.correctAnswers, total: presenter.questionsAmount)
@@ -88,34 +70,22 @@ final class MovieQuizViewController: UIViewController {
     }
     
     
-    private func showNextQuestionOrResults() {
-        setButtonsEnabled(true)
-        if presenter.isLastQuestion() {
-            let resultModel = QuizResultsViewModel(
-                title: "Игра закончена",
-                text: "Правильных ответов: \(presenter.correctAnswers)/10",
-                buttonText: "Сыграть еще раз")
-            show(quiz: resultModel)
-            
-        } else {
-            presenter.switchToNextQuestion()
-
-        }
-    }
-    
     func show(quiz result: QuizResultsViewModel) {
-        let bestGameString: String
-        if let bestGame = statisticService?.bestGame {
-            bestGameString = "\(bestGame.correct)/\(bestGame.total) \(bestGame.date.dateTimeString)"
-        } else {
-            bestGameString = "-"
+        let message = presenter.makeResultsMessage()
+        
+        let alert = UIAlertController(
+            title: result.title,
+            message: message,
+            preferredStyle: .alert)
+     
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.presenter.restartGame()
         }
         
-        let message = """
-            Количество сыгранных квизов: \((statisticService?.gamesCount ?? 0)/presenter.questionsAmount)
-            Рекорд: \(bestGameString)
-            Средняя точность: \(String(format: "%.2f",statisticService?.totalAccuracy ?? 0))%
-            """
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
         
         let model = AlertModel(
             title: result.title,

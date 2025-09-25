@@ -7,16 +7,18 @@
 import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
-    
+    private let statisticService: StatisticServiceProtocol!
+    private var questionFactory: QuestionFactoryProtocol?
+    private weak var viewController: MovieQuizViewController?
     let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     var currentQuestion: QuizQuestion?
     var correctAnswers = 0
-    private var questionFactory: QuestionFactoryProtocol?
-    private weak var viewController: MovieQuizViewController?
     
     init(viewController: MovieQuizViewController) {
         self.viewController = viewController
+        
+        statisticService = StatisticService()
         
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.loadData()
@@ -91,7 +93,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    func showNextQuestionOrResults() {
+    func proceedToNextQuestionOrResults() {
         setButtonsEnabled(true)
         if self.isLastQuestion() {
             let resultModel = QuizResultsViewModel(
@@ -109,5 +111,33 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     func didAnswer(isCorrectAnswer: Bool) {
         correctAnswers += 1
+    }
+    
+    func makeResultsMessage() -> String {
+        statisticService.store(correct: correctAnswers, total: questionsAmount)
+        
+        let bestGame = statisticService.bestGame
+        
+        let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
+        let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)" + "(\(bestGame.date.dateTimeString)"
+        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+        
+        let resultMessage = [currentGameResultLine, totalPlaysCountLine, averageAccuracyLine].joined(separator: "\n")
+        
+        return resultMessage
+    }
+    
+    func proceedWithAnswer(isCorrect: Bool) {
+        
+        didAnswer(isCorrectAnswer: isCorrect)
+        setButtonsEnabled(false)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            [weak self] in
+            guard let self = self else { return }
+            self.setButtonsEnabled(true)
+            self.showNextQuestionOrResults()
+        }
     }
 }
