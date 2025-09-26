@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
     
     
@@ -51,14 +51,18 @@ final class MovieQuizViewController: UIViewController {
         presenter.noButtonClicked()
     }
     
+    func setButtonsEnabled(_ isEnabled: Bool){
+           yesButton.isEnabled = isEnabled
+           noButton.isEnabled = isEnabled
+    }
     
     //MARK: Private functions
     
-    func highlightImageBorder(isCorrect: Bool) {
+    func highlightImageBorder(isCorrectAnswer: Bool) {
         
         previewImage.layer.masksToBounds = true
         previewImage.layer.borderWidth = 8
-        previewImage.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        previewImage.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
     }
     
@@ -73,20 +77,6 @@ final class MovieQuizViewController: UIViewController {
     
     func show(quiz result: QuizResultsViewModel) {
         let message = presenter.makeResultsMessage()
-        
-        let alert = UIAlertController(
-            title: result.title,
-            message: message,
-            preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            
-            self.presenter.restartGame()
-        }
-        
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
         
         let model = AlertModel(
             title: result.title,

@@ -73,7 +73,7 @@ final class StatisticService: StatisticServiceProtocol {
         totalCorrectAnswers += count
         totalQuestionsAsked += amount
         gamesCount += 1
-        let current = GameResult(correct: totalCorrectAnswers, total: totalQuestionsAsked, date: Date())
+        let current = GameResult(correct: count, total: amount, date: Date())
         
         if current.isBetterThan(bestGame) {
             bestGame = current
