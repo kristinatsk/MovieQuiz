@@ -68,6 +68,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     
     func show(quiz step: QuizStepViewModel) {
+        previewImage.layer.borderWidth = 0
         statisticService?.store(correct: presenter.correctAnswers, total: presenter.questionsAmount)
         questionLabel.text = step.question
         indexLabel.text = step.questionNumber
